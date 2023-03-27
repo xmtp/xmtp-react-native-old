@@ -3,6 +3,7 @@ package org.xmtp.rn
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
+import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.Promise
 import org.web3j.utils.Numeric
 import org.xmtp.android.library.Client
@@ -55,7 +56,12 @@ class XmtpReactNativeModule(reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun newConversation(peerAddress: String, promise: Promise) {
+  fun newConversation(
+    peerAddress: String,
+    conversationId: String,
+    metadata: ReadableMap,
+    promise: Promise
+  ) {
     if (client == null) {
       promise.reject("uninitialized", "XMTP client has not been initialized", null)
       return
