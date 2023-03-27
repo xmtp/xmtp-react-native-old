@@ -77,6 +77,11 @@ android {
     targetCompatibility JavaVersion.VERSION_1_8
   }
 
+  packagingOptions {
+    pickFirst '**/libc++_shared.so'
+    pickFirst '**/libfbjni.so'
+  }
+
 }
 
 repositories {
