@@ -14,13 +14,31 @@ buildscript {
   }
 }
 
+allprojects {
+  repositories {
+    mavenLocal()
+    maven {
+      // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+      url("$rootDir/../node_modules/react-native/android")
+    }
+    maven {
+      // Android JSC is installed from npm
+      url("$rootDir/../node_modules/jsc-android/dist")
+    }
+
+    google()
+    jcenter()
+    maven { url 'https://www.jitpack.io' }
+    maven { url 'https://repo1.maven.org/maven2' }
+  }
+}
+
 def isNewArchitectureEnabled() {
   return rootProject.hasProperty("newArchEnabled") && rootProject.getProperty("newArchEnabled") == "true"
 }
 
 apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
-
 
 def appProject = rootProject.allprojects.find { it.plugins.hasPlugin('com.android.application') }
 
@@ -74,6 +92,8 @@ dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+  implementation "org.xmtp:android:0.0.6"
+  implementation "org.web3j:utils:5.0.0"
 }
 
 if (isNewArchitectureEnabled()) {
