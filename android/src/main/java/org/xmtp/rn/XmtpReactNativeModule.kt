@@ -13,13 +13,17 @@ import org.xmtp.android.library.XMTPEnvironment
 import org.xmtp.android.library.messages.PrivateKeyBuilder
 
 
-val ApiEnvs = mapOf("local" to ClientOptions.Api(env = XMTPEnvironment.LOCAL, isSecure = false), "dev" to ClientOptions.Api(env = XMTPEnvironment.DEV, isSecure = true), "production" to ClientOptions.Api(env = XMTPEnvironment.PRODUCTION, isSecure = true))
+val ApiEnvs = mapOf("local" to ClientOptions.Api(env = XMTPEnvironment.LOCAL, isSecure = false),
+  "dev" to ClientOptions.Api(env = XMTPEnvironment.DEV, isSecure = true),
+  "production" to ClientOptions.Api(env = XMTPEnvironment.PRODUCTION, isSecure = true))
 
-class XmtpReactNativeModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
+class XmtpReactNativeModule(reactContext: ReactApplicationContext) :
+  ReactContextBaseJavaModule(reactContext) {
   companion object {
     const val NAME = "XmtpReactNative"
 
-    @ReactMethod fun requiresMainQueueSetup() : Boolean {
+    @ReactMethod
+    fun requiresMainQueueSetup(): Boolean {
       print("requiresMainQueueSetup()")
       return false
     }
@@ -39,7 +43,9 @@ class XmtpReactNativeModule(reactContext: ReactApplicationContext) : ReactContex
     }
     try {
       // TODO: callback signer instead of raw keys
-      val account = PrivateKeyBuilder(PrivateKeyBuilder.buildFromPrivateKeyData(Numeric.hexStringToByteArray(privateKey)))
+      val account =
+        PrivateKeyBuilder(PrivateKeyBuilder.buildFromPrivateKeyData(Numeric.hexStringToByteArray(
+          privateKey)))
       val opt = ClientOptions(api = ApiEnvs[env] ?: ApiEnvs["local"]!!)
       client = Client().create(account = account, options = opt)
       promise.resolve(true)
@@ -118,14 +124,16 @@ class XmtpReactNativeModule(reactContext: ReactApplicationContext) : ReactContex
   }
 
   // JS Adapters
-  private fun toJsMessage(message: DecodedMessage) : Map<String, Any> {
+  private fun toJsMessage(message: DecodedMessage): Map<String, Any> {
     // Change this back to message.encodedContent.fallback
     val text = message.content() ?: message.encodedContent
     return mapOf("id" to message.id, "senderAddress" to message.senderAddress, "text" to text)
   }
 
   // TODO: consider other content types, etc
-  private fun toJsConversation(conversation: Conversation) : Map<String, Any?> =
-    mapOf("topic" to conversation.topic, "peerAddress" to conversation.peerAddress, "conversationId" to conversation.conversationId)
+  private fun toJsConversation(conversation: Conversation): Map<String, Any?> =
+    mapOf("topic" to conversation.topic,
+      "peerAddress" to conversation.peerAddress,
+      "conversationId" to conversation.conversationId)
 
 }

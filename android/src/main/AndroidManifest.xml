@@ -1,4 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="org.xmtp.rn">
+  xmlns:tools="http://schemas.android.com/tools"
+  package="org.xmtp.rn">
 
+  <uses-sdk tools:overrideLibrary="org.xmtp.android.library" />
 </manifest>
