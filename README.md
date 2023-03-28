@@ -10,7 +10,7 @@ This SDK is in **Pre Preview** status and ready for you to start experiment with
 
 However, we do **not** recommend using Pre Preview software in production apps. Software in this status going to change as we iterate on features and feedback.
 
-Specifically, this SDK is working on iOS support and building out more functionality across the native bridges.
+Specifically, this SDK only supports basic Android text messaging. We're still working to support iOS and to support content types beyond text.
 
 To keep up with the latest SDK developments, see the [Issues tab](https://github.com/xmtp/xmtp-react-native/issues) in this repo.
 
@@ -20,16 +20,15 @@ To learn more about XMTP and get answers to frequently asked questions, see [FAQ
 
 ## Example apps
 
-For a basic demonstration of the core concepts and capabilities of the `xmtp-react-native` client SDK, see the Android and iOS [example apps](https://github.com/xmtp/xmtp-react-native/tree/main/example).
+For a basic demonstration of the core concepts and capabilities of the `xmtp-react-native` client SDK, see the [example app](https://github.com/xmtp/xmtp-react-native/tree/main/example).
 
 You can run the example app by:
 
 ```bash
-cd example
-yarn install
-yarn start
-a #for Android
-i #for iOS
+$ cd example
+$ yarn
+$ yarn example start
+$ yarn example android
 ```
 
 ## Reference docs
@@ -162,7 +161,7 @@ import Xmtp from 'xmtp-react-native';
 let conversation1 = await Xmtp.newConversation("0x3F11b27F323b62B159D2642964fa27C46C841897", "mydomain.xyz/foo")
 
 // Start a scoped conversation with ID mydomain.xyz/bar. And add some metadata
-let conversation2 = await Xmtp.newConversation("0x3F11b27F323b62B159D2642964fa27C46C841897", "mydomain.xyz/bar", ["title": "Bar conversation"])
+let conversation2 = await Xmtp.newConversation("0x3F11b27F323b62B159D2642964fa27C46C841897", "mydomain.xyz/bar", { title: "Bar conversation" })
 
 // Get all the conversations
 let conversations = await Xmtp.listConversations()
