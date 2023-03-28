@@ -22,6 +22,16 @@ To learn more about XMTP and get answers to frequently asked questions, see [FAQ
 
 For a basic demonstration of the core concepts and capabilities of the `xmtp-react-native` client SDK, see the Android and iOS [example apps](https://github.com/xmtp/xmtp-react-native/tree/main/example).
 
+You can run the example app by:
+
+```bash
+cd example
+yarn install
+yarn start
+a #for Android
+i #for iOS
+```
+
 ## Reference docs
 
 See the XXXXX for the React client SDK reference documentation.
