@@ -6,11 +6,12 @@
 
 Use `xmtp-react-native` to build with XMTP to send messages between blockchain accounts, including DMs, notifications, announcements, and more.
 
-This SDK is in **Pre Preview** status and ready for you to start experiment with.
-
-However, we do **not** recommend using Pre Preview software in production apps. Software in this status going to change as we iterate on features and feedback.
-
-Specifically, this SDK only supports basic Android text messaging. We're still working to support iOS and to support content types beyond text.
+> **Important:**  
+> This SDK is in **Pre-Preview** status and ready for you to start experimenting with.
+>
+> However, we do **not** recommend using Pre-Preview software in production apps. Software in this status will change as we iterate on features and feedback.
+> 
+> **Specifically, this SDK currently supports Android plain text messaging only.** We're still working to support iOS and content types beyond plain text.
 
 To keep up with the latest SDK developments, see the [Issues tab](https://github.com/xmtp/xmtp-react-native/issues) in this repo.
 
@@ -29,10 +30,6 @@ $ yarn
 $ yarn example start
 $ yarn example android
 ```
-
-## Reference docs
-
-See the XXXXX for the React client SDK reference documentation.
 
 ## Install
 
