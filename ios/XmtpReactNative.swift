@@ -16,6 +16,8 @@ class XmtpReactNative: NSObject {
 
     @objc
     func newConversation(_ peerAddress: String,
+                         conversationId: String,
+                         metadata: NSDictionary,
                          resolve: @escaping RCTPromiseResolveBlock,
                          reject: @escaping RCTPromiseRejectBlock)
     {

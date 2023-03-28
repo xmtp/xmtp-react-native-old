@@ -11,7 +11,11 @@ import {
   TouchableOpacity,
   Modal,
 } from 'react-native';
-import Xmtp, { Conversation, Message } from 'xmtp-react-native';
+import Xmtp, {
+  Conversation,
+  ConversationTopic,
+  Message,
+} from 'xmtp-react-native';
 import { useMemo, useState } from 'react';
 
 // This private key is the connected user. Don't do this in a real app.
@@ -90,7 +94,7 @@ function ConversationModal({
   topic,
   onClose,
 }: {
-  topic: string;
+  topic: ConversationTopic;
   onClose: () => void;
 }) {
   let [messages, setMessages] = useState<Message[]>([]);

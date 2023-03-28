@@ -3,11 +3,13 @@
 @interface RCT_EXTERN_MODULE(XmtpReactNative, NSObject)
 
 RCT_EXTERN_METHOD(configure:(NSString *)env
-                  privateKey:(NSString *)String
+                  privateKey:(NSString *)privateKey
                   resolve:(RCTPromiseResolveBlock *)resolve
                   reject:(RCTPromiseRejectBlock *)reject)
 
 RCT_EXTERN_METHOD(newConversation:(NSString *)peerAddress
+                  conversationId:(NSString *)conversationId
+                  metadata:(NSDictionary *)metadata
                   resolve:(RCTPromiseResolveBlock *)resolve
                   reject:(RCTPromiseRejectBlock *)reject)
 
