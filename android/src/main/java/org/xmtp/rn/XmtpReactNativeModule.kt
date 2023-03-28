@@ -103,14 +103,19 @@ class XmtpReactNativeModule(reactContext: ReactApplicationContext) :
       promise.reject("uninitialized", "XMTP client has not been initialized", null)
       return
     }
-    val convo = conversationByTopic[topic]
-    if (convo == null) {
+    val conversation = conversationByTopic[topic]
+    if (conversation == null) {
       promise.reject("unknown", "unknown conversation topic", null)
       return
     }
     try {
-      val messages = convo.messages()
-      promise.resolve(messages.map { toJsMessage(message = it) })
+      val messages = conversation.messages()
+
+      val res = WritableNativeArray()
+      messages.forEach {
+        res.pushMap(toJsMessage(message = it))
+      }
+      promise.resolve(res)
     } catch (e: Exception) {
       promise.reject("req_failed", "Unable to list XMTP messages in conversation ${e.message}", e)
     }
