@@ -41,6 +41,9 @@ class XmtpReactNativeModule(reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
+  fun address(promise: Promise) = promise.resolve(client?.address)
+
+  @ReactMethod
   fun configure(env: String, privateKey: String, promise: Promise) {
     if (client != null) {
       promise.resolve(false)
