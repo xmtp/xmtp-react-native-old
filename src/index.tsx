@@ -83,6 +83,13 @@ export interface Message {
  */
 export interface Xmtp {
   /**
+   * Get the ethereum address of the configured user.
+   *
+   * Returns `null` when the user is not configured yet.
+   */
+  address(): Promise<string | null>;
+
+  /**
    * Connect to {@param env} as the user having {@param privateKey}.
    *
    * NOTE: this is a placeholder until we implement a proper flow.

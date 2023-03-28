@@ -2,6 +2,9 @@
 
 @interface RCT_EXTERN_MODULE(XmtpReactNative, NSObject)
 
+RCT_EXTERN_METHOD(address:(RCTPromiseResolveBlock *)resolve
+                  reject:(RCTPromiseRejectBlock *)reject)
+
 RCT_EXTERN_METHOD(configure:(NSString *)env
                   privateKey:(NSString *)privateKey
                   resolve:(RCTPromiseResolveBlock *)resolve

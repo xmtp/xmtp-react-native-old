@@ -71,5 +71,8 @@ lib/
 
 example/ios/XmtpReactNativeExample.xcworkspace/
 example/ios/Podfile.lock
-example/yarn.lock
+
+# We exclude the yarn.lock here because it's a library project.
 yarn.lock
+# We include the yarn.lock here because it's an app project.
+!example/yarn.lock

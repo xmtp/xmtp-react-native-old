@@ -6,6 +6,13 @@ import Foundation
 class XmtpReactNative: NSObject {
 
     @objc
+    func address(_ resolve: @escaping RCTPromiseResolveBlock,
+                 reject: @escaping RCTPromiseRejectBlock)
+    {
+        reject("unimplemented", "address() is not implemented", nil)
+    }
+
+    @objc
     func configure(_ env: String,
                    privateKey: String,
                    resolve: @escaping RCTPromiseResolveBlock,
