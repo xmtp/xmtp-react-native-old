@@ -1,10 +1,13 @@
 package org.xmtp.rn
 
+import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableMap
-import com.facebook.react.bridge.Promise
+import com.facebook.react.bridge.ReadableNativeMap
+import com.facebook.react.bridge.WritableNativeArray
+import com.facebook.react.bridge.WritableNativeMap
 import org.web3j.utils.Numeric
 import org.xmtp.android.library.Client
 import org.xmtp.android.library.ClientOptions
@@ -51,7 +54,7 @@ class XmtpReactNativeModule(reactContext: ReactApplicationContext) :
       client = Client().create(account = account, options = opt)
       promise.resolve(true)
     } catch (e: Exception) {
-      promise.reject("misconfig", "Unable to create XMTP client", e)
+      promise.reject("misconfig", "Unable to create XMTP client ${e.message}", e)
     }
   }
 
@@ -60,7 +63,7 @@ class XmtpReactNativeModule(reactContext: ReactApplicationContext) :
     peerAddress: String,
     conversationId: String,
     metadata: ReadableMap,
-    promise: Promise
+    promise: Promise,
   ) {
     if (client == null) {
       promise.reject("uninitialized", "XMTP client has not been initialized", null)
@@ -71,7 +74,7 @@ class XmtpReactNativeModule(reactContext: ReactApplicationContext) :
       conversationByTopic[convo.topic] = convo
       promise.resolve(toJsConversation(conversation = convo))
     } catch (e: Exception) {
-      promise.reject("req_failed", "Unable to create XMTP conversation", e)
+      promise.reject("req_failed", "Unable to create XMTP conversation ${e.message}", e)
     }
   }
 
@@ -82,11 +85,15 @@ class XmtpReactNativeModule(reactContext: ReactApplicationContext) :
       return
     }
     try {
-      val convos = client!!.conversations.list()
-      convos.forEach { conversationByTopic[it.topic] = it }
-      promise.resolve(convos.map { toJsConversation(conversation = it) })
+      val conversations = client!!.conversations.list()
+      val res = WritableNativeArray()
+      conversations.forEach {
+        conversationByTopic[it.topic] = it
+        res.pushMap(toJsConversation(conversation = it))
+      }
+      promise.resolve(res)
     } catch (e: Exception) {
-      promise.reject("req_failed", "Unable to list XMTP conversations", e)
+      promise.reject("req_failed", "Unable to list XMTP conversations ${e.message}", e)
     }
   }
 
@@ -96,22 +103,26 @@ class XmtpReactNativeModule(reactContext: ReactApplicationContext) :
       promise.reject("uninitialized", "XMTP client has not been initialized", null)
       return
     }
-    val convo = conversationByTopic[topic]
-    if (convo == null) {
+    val conversation = conversationByTopic[topic]
+    if (conversation == null) {
       promise.reject("unknown", "unknown conversation topic", null)
       return
     }
     try {
-      val messages = convo.messages()
-      promise.resolve(messages.map { toJsMessage(message = it) })
+      val messages = conversation.messages()
+
+      val res = WritableNativeArray()
+      messages.forEach {
+        res.pushMap(toJsMessage(message = it))
+      }
+      promise.resolve(res)
     } catch (e: Exception) {
-      promise.reject("req_failed", "Unable to list XMTP messages in conversation", e)
+      promise.reject("req_failed", "Unable to list XMTP messages in conversation ${e.message}", e)
     }
   }
 
   @ReactMethod
   fun sendMessage(topic: String, text: String, promise: Promise) {
-    print("call: sendMessage")
     if (client == null) {
       promise.reject("uninitialized", "XMTP client has not been initialized", null)
       return
@@ -125,21 +136,26 @@ class XmtpReactNativeModule(reactContext: ReactApplicationContext) :
       val messageId = conversation.send(text = text)
       promise.resolve(messageId)
     } catch (e: Exception) {
-      promise.reject("req_failed", "Unable to send XMTP message", e)
+      promise.reject("req_failed", "Unable to send XMTP message ${e.message}", e)
     }
   }
 
-  // JS Adapters
-  private fun toJsMessage(message: DecodedMessage): Map<String, Any> {
-    // Change this back to message.encodedContent.fallback
-    val text = message.content() ?: message.encodedContent
-    return mapOf("id" to message.id, "senderAddress" to message.senderAddress, "text" to text)
+  private fun toJsMessage(message: DecodedMessage): ReadableNativeMap {
+    val text = message.content() ?: message.encodedContent.fallback
+    val nativeMap = WritableNativeMap()
+    nativeMap.putString("id", message.id)
+    nativeMap.putString("senderAddress", message.senderAddress)
+    nativeMap.putString("text", text)
+
+    return nativeMap
   }
 
-  // TODO: consider other content types, etc
-  private fun toJsConversation(conversation: Conversation): Map<String, Any?> =
-    mapOf("topic" to conversation.topic,
-      "peerAddress" to conversation.peerAddress,
-      "conversationId" to conversation.conversationId)
+  private fun toJsConversation(conversation: Conversation): ReadableNativeMap {
+    val nativeMap = WritableNativeMap()
+    nativeMap.putString("topic", conversation.topic)
+    nativeMap.putString("peerAddress", conversation.peerAddress)
+    nativeMap.putString("conversationId", conversation.conversationId)
 
+    return nativeMap
+  }
 }
