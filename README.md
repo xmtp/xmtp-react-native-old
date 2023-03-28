@@ -25,7 +25,6 @@ For a basic demonstration of the core concepts and capabilities of the `xmtp-rea
 You can run the example app by:
 
 ```bash
-$ cd example
 $ yarn
 $ yarn example start
 $ yarn example android
