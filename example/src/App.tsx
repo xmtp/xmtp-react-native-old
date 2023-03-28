@@ -57,7 +57,7 @@ export default function App() {
           color={Colors.primary}
           title="Connect"
           onPress={() =>
-            Xmtp.configure('local', EXAMPLE_PRIVATE_KEY)
+            Xmtp.configure('dev', EXAMPLE_PRIVATE_KEY)
               .then(() => setConnected(true))
               .catch((err) => console.error(err.stack))
           }
