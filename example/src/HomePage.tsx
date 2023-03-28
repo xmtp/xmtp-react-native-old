@@ -59,7 +59,7 @@ function ConnectButton() {
       disabled={!!address}
       title="Connect"
       onPress={() =>
-        Xmtp.configure('local', EXAMPLE_PRIVATE_KEY)
+        Xmtp.configure('dev', EXAMPLE_PRIVATE_KEY)
           .then(() => checkConnected())
           .catch((err) => console.error(err.stack))
       }
