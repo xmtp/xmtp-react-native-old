@@ -1,6 +1,10 @@
 import { useXmtpAddress, useXmtpConversations, useXmtpMessages } from './hooks';
 import { useState } from 'react';
-import Xmtp, { ConversationTopic } from 'xmtp-react-native';
+import Xmtp, {
+  authWallet,
+  type ConversationTopic,
+  type XmtpSigner,
+} from 'xmtp-react-native';
 import {
   Button,
   FlatList,
@@ -12,6 +16,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import '@ethersproject/shims';
+import { ethers } from 'ethers';
 import * as React from 'react';
 
 /**
@@ -23,46 +29,62 @@ import * as React from 'react';
  *  - shows a modal overlay for messages in a particular conversation.
  */
 export default function HomePage() {
-  const { data: address } = useXmtpAddress();
+  const { data: address, refetch } = useXmtpAddress();
   const [topic, setTopic] = useState<ConversationTopic | null>(null);
   const isConnected = address != null;
   return (
     <SafeAreaView style={{ backgroundColor: Colors.darker }}>
       <StatusBar barStyle="light-content" backgroundColor={Colors.darker} />
       {isConnected ? (
-        <ConversationList onPressTopic={setTopic} />
+        <>
+          <SendMessageButton />
+          <ConversationList onPressTopic={setTopic} />
+        </>
       ) : (
-        <ConnectButton />
+        <ConnectButton onConnected={refetch} />
       )}
       <ConversationModal topic={topic} onClose={() => setTopic(null)} />
     </SafeAreaView>
   );
 }
 
+// Randomly generated example private key.
+// address = 0x9385da9C104e9ABB7aA6822Eb380C8C3C7D00AFB
+const EXAMPLE_PRIVATE_KEY =
+  '0xeec5aaff7bcdcabba39c4808d05c562bb5aa77fb12a06c678d8dbad7917593fe';
+const signer = new ethers.Wallet(EXAMPLE_PRIVATE_KEY);
+
+// recipient pk = "0xa52e4027e610c519885c7ef1f7ab69d0956981dd0f90053581e59996c8482341"
+const recipient = '0x9eA724075bc85d8bD767E84Be74C15F1DD96a1fb';
+
+function SendMessageButton() {
+  return (
+    <Button
+      color={Colors.darker}
+      title="Send Message"
+      onPress={async () => {
+        let convo = await Xmtp.newConversation(recipient, 'example.com/1', {});
+        await Xmtp.sendMessage(convo.topic, 'Hello World');
+      }}
+    />
+  );
+}
+
 /**
  * Show a {@link Button} to configure the current XMTP user.
  */
-function ConnectButton() {
-  const { data: address, refetch: checkConnected } = useXmtpAddress();
-
-  // This private key is the connected user. Don't do this in a real app.
-  // TODO: support deferred signing callbacks instead of raw keys
-  const EXAMPLE_PRIVATE_KEY =
-    '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80';
-  // Address = 0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266 to message it.
-  // Incidentally, this key is the ephemeral hardhat account #0
-  // https://hardhat.org/hardhat-network/docs/overview#running-stand-alone-in-order-to-support-wallets-and-other-software
+function ConnectButton({ onConnected }: { onConnected: () => void }) {
   return (
     <Button
       color={Colors.primary}
       // Disable the button if we're already connected.
-      disabled={!!address}
       title="Connect"
-      onPress={() =>
-        Xmtp.configure('local', EXAMPLE_PRIVATE_KEY)
-          .then(() => checkConnected())
-          .catch((err) => console.error(err.stack))
-      }
+      onPress={async () => {
+        let keyBundle = await authWallet(signer as XmtpSigner);
+        // TODO: store keyBundle for quick-init next time
+        console.log('connected', keyBundle);
+        onConnected();
+      }}
     />
   );
 }
