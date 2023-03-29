@@ -220,6 +220,9 @@
 				Base,
 			);
 			mainGroup = 83CBB9F61A601CBA00E9B192;
+			packageReferences = (
+				E5303E7B29D3BCD0007EF59C /* XCRemoteSwiftPackageReference "xmtp-react-native" */,
+			);
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -699,6 +702,17 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E5303E7B29D3BCD0007EF59C /* XCRemoteSwiftPackageReference "xmtp-react-native" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/xmtp/xmtp-react-native";
+			requirement = {
+				branch = "np/ios-package";
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
 	};
 	rootObject = 83CBB9F71A601CBA00E9B192 /* Project object */;
 }
