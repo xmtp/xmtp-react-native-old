@@ -14,6 +14,7 @@ import org.xmtp.android.library.ClientOptions
 import org.xmtp.android.library.Conversation
 import org.xmtp.android.library.DecodedMessage
 import org.xmtp.android.library.XMTPEnvironment
+import org.xmtp.android.library.messages.InvitationV1ContextBuilder
 import org.xmtp.android.library.messages.PrivateKeyBuilder
 
 
@@ -73,7 +74,13 @@ class XmtpReactNativeModule(reactContext: ReactApplicationContext) :
       return
     }
     try {
-      val convo = client!!.conversations.newConversation(peerAddress)
+      val convo = if (conversationId.isBlank()) {
+        client!!.conversations.newConversation(peerAddress)
+      } else {
+        client!!.conversations.newConversation(peerAddress,
+          InvitationV1ContextBuilder.buildFromConversation(conversationId,
+            metadata.toHashMap().toMap() as Map<String, String>))
+      }
       conversationByTopic[convo.topic] = convo
       promise.resolve(toJsConversation(conversation = convo))
     } catch (e: Exception) {
