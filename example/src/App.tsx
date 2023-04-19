@@ -4,7 +4,7 @@ import Xmtp from 'xmtp-react-native';
 import HomePage from './HomePage';
 
 const queryClient = new QueryClient();
-Xmtp.configure('local');
+Xmtp.configure('dev');
 
 /**
  * Root component for the example app.
